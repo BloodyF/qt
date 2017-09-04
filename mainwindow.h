@@ -2,13 +2,22 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QLineEdit>
-#include <QPushButton>
-#include<QPlainTextEdit>
+#include <QTableWidget>
 
+#include <QThread>
+#include <QKeyEvent>
+#include <worker.h>
+#include <common.h>
+
+#define STOP_UP 0
+#define STOP_DOWN 1
+#define STOP_LEFT 2
+#define STOP_RIGHT 3
+#define NORMAL 4
 
 namespace Ui {
 class MainWindow;
+
 }
 
 class MainWindow : public QMainWindow
@@ -19,15 +28,18 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private slots:
-    void on_lineEdit_textEdited(const QString &arg1);
-    void on_pushButton_clicked();
-
 private:
+    char scrollFlag = NORMAL;
+    Worker *mWorker;
+    QThread *cacheThread;
     Ui::MainWindow *ui;
-    QPushButton *button;
-    QLineEdit *lineEdit;
-    QPlainTextEdit *plainTextEdit;
+    QTableWidget *mTable;
+
+    void addUpRow(struct row* mRow);
+    void addDownRow(struct row* mRow);
+    void keyPressed();
+    void initTable();
+    void keyPressEvent(QKeyEvent* event);
 };
 
 #endif // MAINWINDOW_H
